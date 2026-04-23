@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ارسال محتوا</title>
+
+    <style>
+        body {
+            font-family: Tahoma, sans-serif;
+            background: #0f172a;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+            margin: 0;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background: #1e293b;
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 0 25px rgba(0,0,0,0.4);
+        }
+
+        h2 {
+            margin-top: 0;
+            text-align: right;
+        }
+
+        a {
+            color: #38bdf8;
+            text-decoration: none;
+        }
+
+        label {
+            display: block;
+            margin: 12px 0 6px;
+            font-weight: bold;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 150px;
+            background: #334155;
+            color: #fff;
+            border: 1px solid #475569;
+            border-radius: 12px;
+            padding: 12px;
+            resize: vertical;
+            box-sizing: border-box;
+            direction: rtl;
+            font-size: 15px;
+            line-height: 1.8;
+        }
+
+        textarea::placeholder {
+            color: #cbd5e1;
+        }
+
+        .meta-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 8px;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #cbd5e1;
+        }
+
+        input[type="file"] {
+            margin-top: 8px;
+        }
+
+        .preview-box {
+            display: none;
+            margin-top: 12px;
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .preview-box img {
+            max-width: 100%;
+            max-height: 250px;
+            border-radius: 10px;
+        }
+
+        .file-name {
+            margin-top: 8px;
+            font-size: 14px;
+            color: #cbd5e1;
+            word-break: break-word;
+        }
+
+        .checks {
+            margin: 18px 0;
+            padding: 14px;
+            background: #0f172a;
+            border-radius: 12px;
+            border: 1px solid #334155;
+        }
+
+        .checks label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 10px 0;
+            font-weight: normal;
+        }
+
+        button {
+            width: 100%;
+            background: #22c55e;
+            border: none;
+            padding: 14px;
+            border-radius: 12px;
+            font-size: 16px;
+            cursor: pointer;
+            color: white;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            background: #16a34a;
+        }
+
+        button:disabled {
+            background: #64748b;
+            cursor: not-allowed;
+        }
+
+        .results {
+            background: #111827;
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            display: none;
+            border: 1px solid #334155;
+        }
+
+        .results ul {
+            margin: 0;
+            padding-right: 18px;
+        }
+
+        .loading {
+            display: none;
+            margin-top: 12px;
+            font-size: 14px;
+            color: #cbd5e1;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                padding: 15px;
+            }
+
+            textarea {
+                min-height: 130px;
+            }
+
+            .meta-row {
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>ارسال محتوا</h2>
+
+    <p><a href="/logout">خروج</a></p>
+
+    <div id="resultsBox" class="results">
+        <ul id="resultsList"></ul>
+    </div>
+
+    <form id="postForm" enctype="multipart/form-data">
+        <label for="text">متن</label>
+        <textarea
+            id="text"
+            name="text"
+            placeholder="متن پست را اینجا بنویس... مثلاً یک کپشن آموزشی، اطلاع‌رسانی یا معرفی محصول"
+        ></textarea>
+
+        <div class="meta-row">
+            <span>مناسب برای انتشار همزمان</span>
+            <span>تعداد کاراکتر: <strong id="charCount">0</strong></span>
+        </div>
+
+        <label for="image">تصویر یا فایل</label>
+        <input id="image" type="file" name="image">
+
+        <div id="previewBox" class="preview-box">
+            <img id="previewImage" src="" alt="preview">
+            <div id="fileName" class="file-name"></div>
+        </div>
+
+        <div class="checks">
+            <label>
+                <input type="checkbox" name="send_bale" value="1" checked>
+                ارسال به بله
+            </label>
+
+            <label>
+                <input type="checkbox" name="send_telegram" value="1" checked>
+                ارسال به تلگرام
+            </label>
+
+            <label>
+                <input type="checkbox" name="send_linkedin" value="1" checked>
+                ارسال به لینکدین
+            </label>
+        </div>
+
+        <button id="submitBtn" type="submit">ارسال</button>
+        <div id="loadingText" class="loading">در حال ارسال...</div>
+    </form>
+</div>
+
+<script>
+    const textArea = document.getElementById("text");
+    const charCount = document.getElementById("charCount");
+    const imageInput = document.getElementById("image");
+    const previewBox = document.getElementById("previewBox");
+    const previewImage = document.getElementById("previewImage");
+    const fileName = document.getElementById("fileName");
+    const postForm = document.getElementById("postForm");
+    const submitBtn = document.getElementById("submitBtn");
+    const loadingText = document.getElementById("loadingText");
+    const resultsBox = document.getElementById("resultsBox");
+    const resultsList = document.getElementById("resultsList");
+
+    textArea.addEventListener("input", function () {
+        charCount.textContent = textArea.value.length;
+    });
+
+    imageInput.addEventListener("change", function () {
+        const file = imageInput.files[0];
+
+        if (!file) {
+            previewBox.style.display = "none";
+            previewImage.src = "";
+            fileName.textContent = "";
+            return;
+        }
+
+        fileName.textContent = file.name;
+
+        if (file.type.startsWith("image/")) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                previewImage.src = e.target.result;
+                previewImage.style.display = "block";
+                previewBox.style.display = "block";
+            };
+            reader.readAsDataURL(file);
+        } else {
+            previewImage.src = "";
+            previewImage.style.display = "none";
+            previewBox.style.display = "block";
+        }
+    });
+
+    postForm.addEventListener("submit", async function (e) {
+        e.preventDefault();
+
+        const formData = new FormData(postForm);
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = "در حال ارسال...";
+        loadingText.style.display = "block";
+        resultsBox.style.display = "none";
+        resultsList.innerHTML = "";
+
+        try {
+            const response = await fetch("/dashboard", {
+                method: "POST",
+                body: formData
+            });
+
+            const data = await response.json();
+
+            resultsList.innerHTML = "";
+
+            if (data.results && data.results.length) {
+                data.results.forEach(item => {
+                    const li = document.createElement("li");
+                    li.textContent = item;
+                    resultsList.appendChild(li);
+                });
+                resultsBox.style.display = "block";
+            }
+
+        } catch (error) {
+            resultsList.innerHTML = "";
+            const li = document.createElement("li");
+            li.textContent = "خطا در ارتباط با سرور";
+            resultsList.appendChild(li);
+            resultsBox.style.display = "block";
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.textContent = "ارسال";
+            loadingText.style.display = "none";
+        }
+    });
+</script>
+
+</body>
+</html>

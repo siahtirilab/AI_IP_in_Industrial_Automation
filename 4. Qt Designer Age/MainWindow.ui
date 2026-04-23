@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Btn_Cal</class>
+ <widget class="QMainWindow" name="Btn_Cal">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>800</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QTextEdit" name="Input_Age">
+    <property name="geometry">
+     <rect>
+      <x>300</x>
+      <y>50</y>
+      <width>211</width>
+      <height>31</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton">
+    <property name="geometry">
+     <rect>
+      <x>350</x>
+      <y>100</y>
+      <width>101</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Cal Age</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="Label">
+    <property name="geometry">
+     <rect>
+      <x>240</x>
+      <y>150</y>
+      <width>301</width>
+      <height>131</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
+    </property>
+   </widget>
+   <widget class="QPlainTextEdit" name="plainTextEdit">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>50</y>
+      <width>151</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color: rgb(255, 0, 0)</string>
+    </property>
+    <property name="plainText">
+     <string>Hello Enter your age please:</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>800</width>
+     <height>21</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

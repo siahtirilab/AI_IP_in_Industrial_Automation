@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ورود</title>
+</head>
+<body>
+    <h2>ورود به پنل</h2>
+
+    {% if error %}
+        <p style="color:red;">{{ error }}</p>
+    {% endif %}
+
+    <form method="POST">
+        <label>نام کاربری</label><br>
+        <input type="text" name="username"><br><br>
+
+        <label>رمز عبور</label><br>
+        <input type="password" name="password"><br><br>
+
+        <button type="submit">ورود</button>
+    </form>
+</body>
+</html>
